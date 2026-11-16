@@ -65,6 +65,12 @@ const (
 	nodeSpreadCost = 1.0
 )
 
+// OtherWorkloadsWeight scales the cost of other AppGroup workloads already on a
+// node: 1 keeps critical workloads apart, 0 ignores them, -1 packs an AppGroup's
+// workloads together while still spreading each workload's own replicas.
+// Exploratory knob, set only by the experiment harness.
+var OtherWorkloadsWeight = 1.0
+
 var _ fwk.PreScorePlugin = &CriticalitySpread{}
 var _ fwk.ScorePlugin = &CriticalitySpread{}
 
@@ -190,7 +196,7 @@ func (cs *CriticalitySpread) PreScore(ctx context.Context, state fwk.CycleState,
 				zoneReplicas[zoneOf(node)]++
 				nodeCost[node.Name] += nodeSpreadCost
 			} else {
-				nodeCost[node.Name] += cs.criticality(scores, p)
+				nodeCost[node.Name] += OtherWorkloadsWeight * cs.criticality(scores, p)
 			}
 		}
 	}
