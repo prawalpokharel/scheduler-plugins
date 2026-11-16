@@ -279,6 +279,31 @@ func TestSchedulingDefaults(t *testing.T) {
 			},
 		},
 		{
+			name:   "empty config CriticalitySpreadArgs",
+			config: &CriticalitySpreadArgs{},
+			expect: &CriticalitySpreadArgs{
+				Namespaces:       []string{"default"},
+				CentralityWeight: pointer.Int64Ptr(40),
+				EntropyWeight:    pointer.Int64Ptr(35),
+				GovernanceWeight: pointer.Int64Ptr(25),
+			},
+		},
+		{
+			name: "set non default CriticalitySpreadArgs",
+			config: &CriticalitySpreadArgs{
+				Namespaces:       []string{"shop"},
+				CentralityWeight: pointer.Int64Ptr(0),
+				EntropyWeight:    pointer.Int64Ptr(0),
+				GovernanceWeight: pointer.Int64Ptr(100),
+			},
+			expect: &CriticalitySpreadArgs{
+				Namespaces:       []string{"shop"},
+				CentralityWeight: pointer.Int64Ptr(0),
+				EntropyWeight:    pointer.Int64Ptr(0),
+				GovernanceWeight: pointer.Int64Ptr(100),
+			},
+		},
+		{
 			name:   "empty config SySchedArgs",
 			config: &SySchedArgs{},
 			expect: &SySchedArgs{

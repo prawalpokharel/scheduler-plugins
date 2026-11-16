@@ -68,6 +68,31 @@ func ValidateNodeResourceTopologyMatchArgs(path *field.Path, args *config.NodeRe
 	return allErrs.ToAggregate()
 }
 
+// ValidateCriticalitySpreadArgs checks that the criticality weights are
+// non-negative and that at least one of them is positive.
+func ValidateCriticalitySpreadArgs(path *field.Path, args *config.CriticalitySpreadArgs) error {
+	var allErrs field.ErrorList
+	weights := []struct {
+		name  string
+		value int64
+	}{
+		{"centralityWeight", args.CentralityWeight},
+		{"entropyWeight", args.EntropyWeight},
+		{"governanceWeight", args.GovernanceWeight},
+	}
+	var sum int64
+	for _, w := range weights {
+		if w.value < 0 {
+			allErrs = append(allErrs, field.Invalid(path.Child(w.name), w.value, "must be non-negative"))
+		}
+		sum += w.value
+	}
+	if len(allErrs) == 0 && sum <= 0 {
+		allErrs = append(allErrs, field.Invalid(path, sum, "at least one weight must be positive"))
+	}
+	return allErrs.ToAggregate()
+}
+
 func validateScoringStrategyType(scoringStrategy config.ScoringStrategyType, path *field.Path) *field.Error {
 	if !validScoringStrategy.Has(string(scoringStrategy)) {
 		return field.Invalid(path, scoringStrategy, "invalid ScoringStrategyType")

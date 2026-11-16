@@ -388,3 +388,24 @@ func TestValidateNodeMetadataArgs(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateCriticalitySpreadArgs(t *testing.T) {
+	testCases := []struct {
+		name    string
+		args    *config.CriticalitySpreadArgs
+		wantErr bool
+	}{
+		{name: "defaults", args: &config.CriticalitySpreadArgs{CentralityWeight: 40, EntropyWeight: 35, GovernanceWeight: 25}},
+		{name: "governance only", args: &config.CriticalitySpreadArgs{GovernanceWeight: 1}},
+		{name: "negative weight", args: &config.CriticalitySpreadArgs{CentralityWeight: -1, GovernanceWeight: 10}, wantErr: true},
+		{name: "all zero", args: &config.CriticalitySpreadArgs{}, wantErr: true},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := ValidateCriticalitySpreadArgs(nil, tc.args)
+			if (err != nil) != tc.wantErr {
+				t.Errorf("wantErr %v, got %v", tc.wantErr, err)
+			}
+		})
+	}
+}

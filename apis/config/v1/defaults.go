@@ -103,6 +103,14 @@ var (
 	// DefaultNetworkTopologyName contains the networkTopology CR name to be used by networkAware plugins
 	DefaultNetworkTopologyName = "nt-default"
 
+	// Defaults for CriticalitySpread
+	// DefaultCriticalitySpreadCentralityWeight is the default weight of dependency-graph centrality
+	DefaultCriticalitySpreadCentralityWeight int64 = 40
+	// DefaultCriticalitySpreadEntropyWeight is the default weight of dependency-bandwidth entropy
+	DefaultCriticalitySpreadEntropyWeight int64 = 35
+	// DefaultCriticalitySpreadGovernanceWeight is the default weight of the declared criticality label
+	DefaultCriticalitySpreadGovernanceWeight int64 = 25
+
 	// Defaults for SySched
 	// DefaultSySchedProfileNamespace is the namesapce of the default syscall profile CR for SySched plugin
 	DefaultSySchedProfileNamespace = "default"
@@ -250,6 +258,22 @@ func SetDefaults_NetworkOverheadArgs(obj *NetworkOverheadArgs) {
 
 	if obj.NetworkTopologyName == nil {
 		obj.NetworkTopologyName = &DefaultNetworkTopologyName
+	}
+}
+
+// SetDefaults_CriticalitySpreadArgs sets the default parameters for the CriticalitySpread plugin.
+func SetDefaults_CriticalitySpreadArgs(obj *CriticalitySpreadArgs) {
+	if len(obj.Namespaces) == 0 {
+		obj.Namespaces = []string{metav1.NamespaceDefault}
+	}
+	if obj.CentralityWeight == nil {
+		obj.CentralityWeight = &DefaultCriticalitySpreadCentralityWeight
+	}
+	if obj.EntropyWeight == nil {
+		obj.EntropyWeight = &DefaultCriticalitySpreadEntropyWeight
+	}
+	if obj.GovernanceWeight == nil {
+		obj.GovernanceWeight = &DefaultCriticalitySpreadGovernanceWeight
 	}
 }
 

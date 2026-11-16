@@ -34,6 +34,7 @@ import (
 	"sigs.k8s.io/scheduler-plugins/apis/config"
 	v1 "sigs.k8s.io/scheduler-plugins/apis/config/v1"
 	"sigs.k8s.io/scheduler-plugins/pkg/coscheduling"
+	"sigs.k8s.io/scheduler-plugins/pkg/networkaware/criticalityspread"
 	"sigs.k8s.io/scheduler-plugins/pkg/networkaware/networkoverhead"
 	"sigs.k8s.io/scheduler-plugins/pkg/networkaware/topologicalsort"
 	"sigs.k8s.io/scheduler-plugins/pkg/noderesources"
@@ -247,6 +248,8 @@ profiles:
     args:
   - name: NetworkOverhead
     args:
+  - name: CriticalitySpread
+    args:
 `),
 			wantProfiles: []schedconfig.KubeSchedulerProfile{
 				{
@@ -265,6 +268,15 @@ profiles:
 								Namespaces:          []string{"default"},
 								WeightsName:         "UserDefined",
 								NetworkTopologyName: "nt-default",
+							},
+						},
+						{
+							Name: criticalityspread.Name,
+							Args: &config.CriticalitySpreadArgs{
+								Namespaces:       []string{"default"},
+								CentralityWeight: 40,
+								EntropyWeight:    35,
+								GovernanceWeight: 25,
 							},
 						},
 						{

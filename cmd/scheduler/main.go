@@ -26,6 +26,7 @@ import (
 
 	"sigs.k8s.io/scheduler-plugins/pkg/capacityscheduling"
 	"sigs.k8s.io/scheduler-plugins/pkg/coscheduling"
+	"sigs.k8s.io/scheduler-plugins/pkg/networkaware/criticalityspread"
 	"sigs.k8s.io/scheduler-plugins/pkg/networkaware/networkoverhead"
 	"sigs.k8s.io/scheduler-plugins/pkg/networkaware/topologicalsort"
 	"sigs.k8s.io/scheduler-plugins/pkg/nodemetadata"
@@ -54,6 +55,7 @@ func main() {
 		app.WithPlugin(loadvariationriskbalancing.Name, loadvariationriskbalancing.New),
 		app.WithPlugin(networkoverhead.Name, networkoverhead.New),
 		app.WithPlugin(topologicalsort.Name, topologicalsort.New),
+		app.WithPlugin(criticalityspread.Name, criticalityspread.New),
 		app.WithPlugin(nodemetadata.Name, nodemetadata.New),
 		app.WithPlugin(noderesources.AllocatableName, noderesources.NewAllocatable),
 		app.WithPlugin(noderesourcetopology.Name, noderesourcetopology.New),

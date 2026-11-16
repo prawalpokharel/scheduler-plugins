@@ -294,6 +294,25 @@ type NetworkOverheadArgs struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// CriticalitySpreadArgs holds arguments used to configure the CriticalitySpread plugin.
+type CriticalitySpreadArgs struct {
+	metav1.TypeMeta
+
+	// Namespaces in which the plugin looks for AppGroup CRs.
+	Namespaces []string
+
+	// CentralityWeight, EntropyWeight and GovernanceWeight set how much the
+	// dependency-graph centrality, the entropy of a workload's dependency
+	// bandwidths and the operator-declared criticality label contribute to a
+	// workload's criticality. Each is a non-negative integer and at least one
+	// must be positive; only their ratios matter.
+	CentralityWeight int64
+	EntropyWeight    int64
+	GovernanceWeight int64
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
 type SySchedArgs struct {
 	metav1.TypeMeta
 
